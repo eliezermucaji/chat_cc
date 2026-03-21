@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chat em Grupo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header do chat */
+        .chat-header {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            font-size: 1.3rem;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        /* Área de mensagens */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.received {
+            background: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.sent {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-text {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        /* Input area */
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .input-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .message-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .send-button:hover {
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        /* Mensagem vazia */
+        .empty-messages {
+            text-align: center;
+            color: #6c757d;
+            padding: 40px;
+            font-size: 0.9rem;
+        }
+
+        /* Scrollbar */
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>💬 Chat do Grupo</h1>
+            <p>Conversa em grupo</p>
+        </div>
+        
+        <div class="messages-area" id="messagesArea">
+            <div class="empty-messages">
+                💬 Nenhuma mensagem ainda<br>
+                Seja o primeiro a enviar uma mensagem!
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <form class="input-form" id="messageForm">
+                <input 
+                    type="text" 
+                    class="message-input" 
+                    id="messageInput" 
+                    placeholder="Digite sua mensagem..."
+                    autocomplete="off"
+                >
+                <button type="submit" class="send-button">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Armazenar mensagens
+        let messages = [];
+        
+        // Função para formatar hora atual
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+        
+        // Renderizar mensagens
+        function renderMessages() {
+            const messagesArea = document.getElementById('messagesArea');
+            
+            if (messages.length === 0) {
+                messagesArea.innerHTML = `
+                    <div class="empty-messages">
+                        💬 Nenhuma mensagem ainda<br>
+                        Seja o primeiro a enviar uma mensagem!
+                    </div>
+                `;
+                return;
+            }
+            
+            messagesArea.innerHTML = '';
+            
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
+                messageDiv.innerHTML = `
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${message.time}</div>
+                `;
+                messagesArea.appendChild(messageDiv);
+            });
+            
+            // Scroll para a última mensagem
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+        
+        // Função para escapar HTML (prevenir XSS)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Enviar mensagem
+        function sendMessage(text) {
+            if (!text || text.trim() === '') {
+                return false;
+            }
+            
+            const newMessage = {
+                id: Date.now(),
+                text: text.trim(),
+                time: getCurrentTime(),
+                isSent: true
+            };
+            
+            messages.push(newMessage);
+            renderMessages();
+            
+            // Simular resposta automática de outros participantes (sem mostrar nomes)
+            setTimeout(() => {
+                const responses = [
+                    "Legal! 👍",
+                    "Concordo!",
+                    "Boa ideia!",
+                    "Obrigado pela mensagem!",
+                    "Continue assim!",
+                    "Interessante...",
+                    "Vamos nessa!",
+                    "Show! 😊",
+                    "Com certeza!",
+                    "Verdade!",
+                    "Excelente ponto!",
+                    "Isso mesmo!"
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                
+                const responseMessage = {
+                    id: Date.now(),
+                    text: randomResponse,
+                    time: getCurrentTime(),
+                    isSent: false
+                };
+                
+                messages.push(responseMessage);
+                renderMessages();
+            }, 1000);
+            
+            return true;
+        }
+        
+        // Inicializar chat
+        function init() {
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('messageInput');
+            
+            messageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const messageText = messageInput.value;
+                if (sendMessage(messageText)) {
+                    messageInput.value = '';
+                    messageInput.focus();
+                }
+            });
+        }
+        
+        // Iniciar aplicação
+        init();
+    </script>
+</body>
+</html>

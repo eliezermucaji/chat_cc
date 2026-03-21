@@ -437,6 +437,7 @@
             }
             
             const newMessage = {
+                token_id: socket.id,
                 id: Date.now(),
                 text: text.trim(),
                 time: getCurrentTime(),
@@ -451,8 +452,7 @@
 
         socket.on('novamensagem', (anser)=> {
             const msg = anser.msg;
-            msg.isSent = anser.socket_id == socket.id;
-            messages.push(msg);
+            msg.forEach(element=>messages.push(element));
             renderMessages();
         });
         
@@ -465,7 +465,7 @@
                 e.preventDefault();
                 const messageText = messageInput.value;
                 if (sendMessage(messageText)) {
-                    messageInput.value = '';
+                    messageInput.vaocalue = '';
                     messageInput.focus();
                 }
             });

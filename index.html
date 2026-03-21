@@ -451,12 +451,19 @@
 
         }
 
-        socket.on('novamensagem', (anser)=> {
-            const msgs = anser.msgs;
-            console.log(msgs);
-            msgs.forEach(element=>{element.isSent = socket.id == element.token_id; messages.push(element)});
-        
-            renderMessages();
+        socket.on('novamensagem', (msg)=> {
+            const message = msg;
+            message.isSent = socket.id == message.token_id;
+            messages.push(message);
+            const messagesArea = document.getElementById('messagesArea');
+
+            const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
+                messageDiv.innerHTML = `
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${message.time}</div>
+                `;
+            messagesArea.appendChild(messageDiv);
         });
         
         // Inicializar chat
@@ -469,7 +476,7 @@
                 e.preventDefault();
                 const messageText = messageInput.value;
                 if (sendMessage(messageText)) {
-                    messageInput.vaocalue = '';
+                    messageInput.value = '';
                     messageInput.focus();
                 }
             });

@@ -442,7 +442,7 @@
     <div class="chat-container">
         <div class="chat-header">
             <h1>💬 Chat do Grupo</h1>
-            <p id="onlines">Conversa em grupo</p>
+            <p>Conversa em grupo</p>
             <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
         </div>
         
@@ -497,10 +497,6 @@
                 localStorage.setItem('darkMode', 'disabled');
                 darkModeToggle.textContent = '🌙';
             }
-        });
-
-        socket.on('onlines', (onlines)=>{
-            document.getElementById('onlines').innerText(`${onlines} online`);
         });
         
         // Armazenar mensagens

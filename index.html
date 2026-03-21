@@ -216,11 +216,14 @@
             </form>
         </div>
     </div>
-
+    <script src="https://backend-chat-message.onrender.com/socket.io/socket.io.js"></script>
     <script>
         // Armazenar mensagens
+        const socket = io("https://backend-chat-message.onrender.com/");
         let messages = [];
-        
+        socket.on('connect', (msg)=>{
+            console.log("Online");
+        });
         // Função para formatar hora atual
         function getCurrentTime() {
             const now = new Date();
@@ -276,41 +279,17 @@
                 time: getCurrentTime(),
                 isSent: true
             };
-            
-            messages.push(newMessage);
-            renderMessages();
-            
-            // Simular resposta automática de outros participantes (sem mostrar nomes)
-            setTimeout(() => {
-                const responses = [
-                    "Legal! 👍",
-                    "Concordo!",
-                    "Boa ideia!",
-                    "Obrigado pela mensagem!",
-                    "Continue assim!",
-                    "Interessante...",
-                    "Vamos nessa!",
-                    "Show! 😊",
-                    "Com certeza!",
-                    "Verdade!",
-                    "Excelente ponto!",
-                    "Isso mesmo!"
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                
-                const responseMessage = {
-                    id: Date.now(),
-                    text: randomResponse,
-                    time: getCurrentTime(),
-                    isSent: false
-                };
-                
-                messages.push(responseMessage);
-                renderMessages();
-            }, 1000);
+
+            socket.emit('enviar_mensagem', newMessage);
+        
             
             return true;
         }
+
+        socket.on('novamensagem', (anser)=> {
+            messages.push(anser.msg);
+            renderMessages();
+        });
         
         // Inicializar chat
         function init() {

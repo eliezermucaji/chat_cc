@@ -18,6 +18,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode body */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .chat-container {
@@ -30,6 +36,13 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode chat container */
+        body.dark-mode .chat-container {
+            background: #1e1e2e;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         /* Header do chat */
@@ -38,17 +51,65 @@
             background: white;
             border-bottom: 1px solid #e9ecef;
             text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Dark mode header */
+        body.dark-mode .chat-header {
+            background: #2d2d3a;
+            border-bottom: 1px solid #3d3d4a;
         }
 
         .chat-header h1 {
             font-size: 1.3rem;
             color: #495057;
             margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode header title */
+        body.dark-mode .chat-header h1 {
+            color: #e0e0e0;
         }
 
         .chat-header p {
             font-size: 0.85rem;
             color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode header subtitle */
+        body.dark-mode .chat-header p {
+            color: #a0a0b0;
+        }
+
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: #764ba2;
         }
 
         /* Área de mensagens */
@@ -60,6 +121,12 @@
             flex-direction: column;
             gap: 10px;
             background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode messages area */
+        body.dark-mode .messages-area {
+            background: #1a1a2a;
         }
 
         .message {
@@ -68,6 +135,7 @@
             border-radius: 12px;
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -87,11 +155,22 @@
             border-bottom-left-radius: 4px;
         }
 
+        /* Dark mode received message */
+        body.dark-mode .message.received {
+            background: #2d2d3a;
+            color: #e0e0e0;
+        }
+
         .message.sent {
             background: #667eea;
             color: white;
             align-self: flex-end;
             border-bottom-right-radius: 4px;
+        }
+
+        /* Dark mode sent message */
+        body.dark-mode .message.sent {
+            background: #764ba2;
         }
 
         .message-text {
@@ -106,11 +185,23 @@
             text-align: right;
         }
 
+        /* Dark mode message time */
+        body.dark-mode .message-time {
+            color: #a0a0b0;
+        }
+
         /* Input area */
         .input-area {
             padding: 20px;
             background: white;
             border-top: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode input area */
+        body.dark-mode .input-area {
+            background: #2d2d3a;
+            border-top: 1px solid #3d3d4a;
         }
 
         .input-form {
@@ -127,10 +218,27 @@
             outline: none;
             transition: all 0.3s;
             font-family: inherit;
+            background: white;
+            color: #495057;
+        }
+
+        /* Dark mode input */
+        body.dark-mode .message-input {
+            background: #1a1a2a;
+            border: 2px solid #3d3d4a;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .message-input::placeholder {
+            color: #6c757d;
         }
 
         .message-input:focus {
             border-color: #667eea;
+        }
+
+        body.dark-mode .message-input:focus {
+            border-color: #764ba2;
         }
 
         .send-button {
@@ -153,12 +261,27 @@
             transform: translateY(0);
         }
 
+        /* Dark mode send button */
+        body.dark-mode .send-button {
+            background: #764ba2;
+        }
+
+        body.dark-mode .send-button:hover {
+            background: #5a3780;
+        }
+
         /* Mensagem vazia */
         .empty-messages {
             text-align: center;
             color: #6c757d;
             padding: 40px;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Dark mode empty message */
+        body.dark-mode .empty-messages {
+            color: #a0a0b0;
         }
 
         /* Scrollbar */
@@ -175,6 +298,15 @@
             border-radius: 3px;
         }
 
+        /* Dark mode scrollbar */
+        body.dark-mode .messages-area::-webkit-scrollbar-track {
+            background: #2d2d3a;
+        }
+
+        body.dark-mode .messages-area::-webkit-scrollbar-thumb {
+            background: #764ba2;
+        }
+
         /* Responsivo */
         @media (max-width: 768px) {
             .chat-container {
@@ -186,6 +318,12 @@
             .message {
                 max-width: 85%;
             }
+
+            .dark-mode-toggle {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -194,6 +332,7 @@
         <div class="chat-header">
             <h1>💬 Chat do Grupo</h1>
             <p>Conversa em grupo</p>
+            <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
         </div>
         
         <div class="messages-area" id="messagesArea">
@@ -218,6 +357,30 @@
     </div>
     <script src="https://backend-chat-message.onrender.com/socket.io/socket.io.js"></script>
     <script>
+        // Dark mode functionality
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        
+        // Check for saved dark mode preference
+        const savedDarkMode = localStorage.getItem('darkMode');
+        if (savedDarkMode === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeToggle.textContent = '☀️';
+        }
+        
+        // Toggle dark mode
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                darkModeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+                darkModeToggle.textContent = '🌙';
+            }
+        });
+        
         // Armazenar mensagens
         const socket = io("https://backend-chat-message.onrender.com/");
         let messages = [];

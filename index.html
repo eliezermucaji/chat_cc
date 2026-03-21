@@ -136,6 +136,7 @@
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         @keyframes fadeIn {
@@ -173,6 +174,32 @@
             background: #764ba2;
         }
 
+        /* Estilo para mensagem respondida */
+        .reply-preview {
+            background: rgba(0, 0, 0, 0.1);
+            border-left: 3px solid #667eea;
+            padding: 5px 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        body.dark-mode .reply-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #764ba2;
+        }
+
+        .reply-sender {
+            font-weight: bold;
+            margin-bottom: 3px;
+            font-size: 0.75rem;
+        }
+
+        .reply-text {
+            opacity: 0.8;
+            font-style: italic;
+        }
+
         .message-text {
             font-size: 0.95rem;
             line-height: 1.4;
@@ -185,9 +212,36 @@
             text-align: right;
         }
 
-        /* Dark mode message time */
-        body.dark-mode .message-time {
-            color: #a0a0b0;
+        /* Botão de responder */
+        .reply-button {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 15px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: inherit;
+        }
+
+        .message:hover .reply-button {
+            opacity: 1;
+        }
+
+        body.dark-mode .reply-button {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .reply-button:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .reply-button:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
 
         /* Input area */
@@ -202,6 +256,57 @@
         body.dark-mode .input-area {
             background: #2d2d3a;
             border-top: 1px solid #3d3d4a;
+        }
+
+        /* Preview de resposta */
+        .reply-preview-area {
+            background: #f1f3f5;
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: none;
+            position: relative;
+            border-left: 3px solid #667eea;
+        }
+
+        body.dark-mode .reply-preview-area {
+            background: #1a1a2a;
+            border-left-color: #764ba2;
+        }
+
+        .reply-preview-area.active {
+            display: block;
+        }
+
+        .reply-preview-content {
+            font-size: 0.85rem;
+        }
+
+        .reply-preview-sender {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .reply-preview-text {
+            opacity: 0.8;
+            font-style: italic;
+            word-break: break-word;
+        }
+
+        .cancel-reply {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #6c757d;
+            padding: 0 4px;
+        }
+
+        .cancel-reply:hover {
+            color: #dc3545;
         }
 
         .input-form {
@@ -324,6 +429,12 @@
                 height: 35px;
                 font-size: 1rem;
             }
+
+            .reply-button {
+                opacity: 1;
+                bottom: 2px;
+                right: 5px;
+            }
         }
     </style>
 </head>
@@ -343,6 +454,13 @@
         </div>
         
         <div class="input-area">
+            <div class="reply-preview-area" id="replyPreviewArea">
+                <button class="cancel-reply" id="cancelReplyBtn">✕</button>
+                <div class="reply-preview-content">
+                    <div class="reply-preview-sender" id="replyPreviewSender">Respondendo a:</div>
+                    <div class="reply-preview-text" id="replyPreviewText"></div>
+                </div>
+            </div>
             <form class="input-form" id="messageForm">
                 <input 
                     type="text" 
@@ -384,16 +502,84 @@
         // Armazenar mensagens
         const socket = io("https://backend-chat-message.onrender.com/");
         let messages = [];
+        let replyingTo = null; // Armazenar mensagem que está sendo respondida
+        
         socket.on('connect', (msg)=>{
             console.log("Online");
         });
+        
         // Função para formatar hora atual
         function getCurrentTime() {
             const now = new Date();
             return now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         }
         
-        // Renderizar mensagens
+        // Função para escapar HTML (prevenir XSS)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Função para truncar texto longo
+        function truncateText(text, maxLength = 50) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+        
+        // Função para criar elemento de mensagem
+        function createMessageElement(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
+            messageDiv.setAttribute('data-message-id', message.id);
+            
+            let html = '';
+            
+            // Adicionar preview da mensagem respondida se existir
+            if (message.replyTo) {
+                html += `
+                    <div class="reply-preview">
+                        <div class="reply-sender">↳ Respondendo a: ${escapeHtml(message.replyTo.sender || 'Alguém')}</div>
+                        <div class="reply-text">${escapeHtml(truncateText(message.replyTo.text, 60))}</div>
+                    </div>
+                `;
+            }
+            
+            html += `
+                <div class="message-text">${escapeHtml(message.text)}</div>
+                <div class="message-time">${message.time}</div>
+                <button class="reply-button" onclick="setReplyTo(${message.id})">↩ Responder</button>
+            `;
+            
+            messageDiv.innerHTML = html;
+            return messageDiv;
+        }
+        
+        // Função para definir qual mensagem será respondida
+        window.setReplyTo = function(messageId) {
+            const message = messages.find(m => m.id === messageId);
+            if (message) {
+                replyingTo = message;
+                const replyPreviewArea = document.getElementById('replyPreviewArea');
+                const replyPreviewSender = document.getElementById('replyPreviewSender');
+                const replyPreviewText = document.getElementById('replyPreviewText');
+                
+                replyPreviewSender.textContent = `Respondendo a: ${message.isSent ? 'Você' : 'Alguém'}`;
+                replyPreviewText.textContent = truncateText(message.text, 80);
+                replyPreviewArea.classList.add('active');
+                
+                // Focar no input
+                document.getElementById('messageInput').focus();
+            }
+        };
+        
+        // Cancelar resposta
+        document.getElementById('cancelReplyBtn').addEventListener('click', () => {
+            replyingTo = null;
+            document.getElementById('replyPreviewArea').classList.remove('active');
+        });
+        
+        // Renderizar todas as mensagens
         function renderMessages() {
             const messagesArea = document.getElementById('messagesArea');
             
@@ -410,24 +596,12 @@
             messagesArea.innerHTML = '';
             
             messages.forEach(message => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
-                messageDiv.innerHTML = `
-                    <div class="message-text">${escapeHtml(message.text)}</div>
-                    <div class="message-time">${message.time}</div>
-                `;
+                const messageDiv = createMessageElement(message);
                 messagesArea.appendChild(messageDiv);
             });
             
             // Scroll para a última mensagem
             messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-        
-        // Função para escapar HTML (prevenir XSS)
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
         
         // Enviar mensagem
@@ -443,31 +617,41 @@
                 time: getCurrentTime(),
                 isSent: true
             };
-
-            socket.emit('enviar_mensagem', newMessage);
-        
             
+            // Adicionar informação de resposta se houver
+            if (replyingTo) {
+                newMessage.replyTo = {
+                    id: replyingTo.id,
+                    text: replyingTo.text,
+                    sender: replyingTo.isSent ? 'Você' : 'Alguém'
+                };
+                // Limpar resposta após enviar
+                replyingTo = null;
+                document.getElementById('replyPreviewArea').classList.remove('active');
+            }
+            
+            socket.emit('enviar_mensagem', newMessage);
             return true;
-
         }
-
-        socket.on('novamensagem', (msg)=> {
-
+        
+        // Receber novas mensagens
+        socket.on('novamensagem', (msg) => {
             const message = msg.msg;
             message.isSent = socket.id == msg.token_id;
             messages.push(message);
+            
             const messagesArea = document.getElementById('messagesArea');
-
-            const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
-                messageDiv.innerHTML = `
-                    <div class="message-text">${escapeHtml(message.text)}</div>
-                    <div class="message-time">${message.time}</div>
-                `;
+            
+            // Remover mensagem vazia se existir
+            if (messagesArea.querySelector('.empty-messages')) {
+                messagesArea.innerHTML = '';
+            }
+            
+            const messageDiv = createMessageElement(message);
             messagesArea.appendChild(messageDiv);
-
-                // auto scroll
-    messagesArea.scrollTop = messagesArea.scrollHeight;
+            
+            // Auto scroll
+            messagesArea.scrollTop = messagesArea.scrollHeight;
         });
         
         // Inicializar chat
@@ -476,7 +660,6 @@
             const messageInput = document.getElementById('messageInput');
             
             messageForm.addEventListener('submit', (e) => {
-
                 e.preventDefault();
                 const messageText = messageInput.value;
                 if (sendMessage(messageText)) {

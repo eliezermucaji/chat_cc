@@ -448,18 +448,14 @@
         
             
             return true;
+
         }
 
         socket.on('novamensagem', (anser)=> {
             const msgs = anser.msgs;
             console.log(msgs);
-            msgs.forEach(element=>messages.push(element));
-            renderMessages();
-        });
-
-        socket.on('init', (anser)=>{
-            const msg = anser.msgs;
-            msgs.forEach(element=>messages.push(element));
+            msgs.forEach(element=>{element.isSent = socket.id == element.token_id; messages.push(element)});
+        
             renderMessages();
         });
         
@@ -469,6 +465,7 @@
             const messageInput = document.getElementById('messageInput');
             
             messageForm.addEventListener('submit', (e) => {
+
                 e.preventDefault();
                 const messageText = messageInput.value;
                 if (sendMessage(messageText)) {

@@ -451,8 +451,15 @@
         }
 
         socket.on('novamensagem', (anser)=> {
-            const msg = anser.msg;
-            msg.forEach(element=>messages.push(element));
+            const msgs = anser.msgs;
+            console.log(msgs);
+            msgs.forEach(element=>messages.push(element));
+            renderMessages();
+        });
+
+        socket.on('init', (anser)=>{
+            const msg = anser.msgs;
+            msgs.forEach(element=>messages.push(element));
             renderMessages();
         });
         

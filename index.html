@@ -452,8 +452,9 @@
         }
 
         socket.on('novamensagem', (msg)=> {
-            const message = msg;
-            message.isSent = socket.id == message.token_id;
+
+            const message = msg.msg;
+            message.isSent = socket.id == msg.token_id;
             messages.push(message);
             const messagesArea = document.getElementById('messagesArea');
 
@@ -464,6 +465,9 @@
                     <div class="message-time">${message.time}</div>
                 `;
             messagesArea.appendChild(messageDiv);
+
+                // auto scroll
+    messagesArea.scrollTop = messagesArea.scrollHeight;
         });
         
         // Inicializar chat

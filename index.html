@@ -287,7 +287,9 @@
         }
 
         socket.on('novamensagem', (anser)=> {
-            messages.push(anser.msg);
+            const msg = anser.msg;
+            msg.isSent = anser.socket_id == socket.id;
+            messages.push(msg);
             renderMessages();
         });
         

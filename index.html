@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Chat em Grupo</title>
+    <title>NeuserChat</title>
     <style>
         * {
             margin: 0;
@@ -169,17 +169,10 @@
         }
 
         .chat-password-badge {
-            background: #ffc107;
-            color: #856404;
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 0.7rem;
             font-weight: bold;
-        }
-
-        body.dark-mode .chat-password-badge {
-            background: #ffc107;
-            color: #856404;
         }
 
         /* Botões */
@@ -337,6 +330,7 @@
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         @keyframes fadeIn {
@@ -351,7 +345,7 @@
         }
 
         .message.received {
-            background: rgb(105, 109, 106);
+            background: #6c757d;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             color: #ffffff;
@@ -371,6 +365,34 @@
 
         body.dark-mode .message.sent {
             background: #764ba2;
+        }
+
+        /* Reply badge */
+        .reply-badge {
+            background: rgba(0,0,0,0.15);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            border-left: 3px solid;
+        }
+
+        .message.sent .reply-badge {
+            border-left-color: rgba(255,255,255,0.5);
+        }
+
+        .message.received .reply-badge {
+            border-left-color: rgba(255,255,255,0.5);
+        }
+
+        .reply-sender {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .reply-text {
+            font-style: italic;
+            opacity: 0.9;
         }
 
         .message-text {
@@ -401,6 +423,34 @@
             color: #a0a0b0;
         }
 
+        /* Reply button */
+        .reply-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .message.sent .reply-button {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .message.received .reply-button {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .reply-button:hover {
+            background: rgba(0,0,0,0.15);
+            transform: scale(1.05);
+        }
+
         /* Input area */
         .input-area {
             padding: 20px;
@@ -414,16 +464,75 @@
             border-top: 1px solid #3d3d4a;
         }
 
+        .reply-preview {
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        body.dark-mode .reply-preview {
+            background: #1a1a2a;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reply-preview-content {
+            flex: 1;
+        }
+
+        .reply-preview-label {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 3px;
+        }
+
+        .reply-preview-text {
+            color: #6c757d;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0 5px;
+            transition: all 0.2s;
+        }
+
+        .cancel-reply:hover {
+            transform: scale(1.1);
+        }
+
         .input-form {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: flex-end;
         }
 
         .input-wrapper {
             flex: 1;
             display: flex;
             gap: 10px;
+            align-items: flex-end;
         }
 
         .message-input {
@@ -437,6 +546,9 @@
             font-family: inherit;
             background: white;
             color: #495057;
+            resize: none;
+            min-height: 45px;
+            max-height: 100px;
         }
 
         body.dark-mode .message-input {
@@ -449,6 +561,12 @@
             border-color: #667eea;
         }
 
+        /* Botões alinhados à direita */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .photo-button {
             padding: 12px 20px;
             background: #6c757d;
@@ -458,6 +576,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .photo-button:hover {
@@ -474,6 +593,7 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s;
+            white-space: nowrap;
         }
 
         .send-button:hover {
@@ -508,15 +628,98 @@
             object-fit: contain;
         }
 
+        /* Responsividade Mobile */
         @media (max-width: 768px) {
             .chat-container {
                 width: 100%;
                 height: 100vh;
                 border-radius: 0;
             }
+            
             .message {
                 max-width: 85%;
             }
+            
+            .input-form {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .input-wrapper {
+                width: 100%;
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .message-input {
+                width: 100%;
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                display: flex;
+                gap: 8px;
+                justify-content: space-between;
+            }
+            
+            .photo-button, .send-button {
+                flex: 1;
+                text-align: center;
+                padding: 10px 16px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .photo-button, .send-button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .reply-preview {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+            
+            .chat-header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .back-button, .dark-mode-toggle {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+            
+            .back-button {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Scrollbar Personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #2d2d3a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
@@ -542,63 +745,98 @@
         <img id="modalImage" alt="Imagem ampliada">
     </div>
 
-    <script src="https://backend-chat-message.onrender.com/socket.io/socket.io.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
         // Estado da aplicação
-        const endpoint = "https://backend-chat-message.onrender.com";
+        const endpoint = "http://localhost:3000";
         let currentChat = null;
         let chats = [];
         let messages = [];
-        let socket = io(endpoint);
+        let socket = null;
         let currentModalType = null; // 'create' ou 'enter'
         let selectedChatForEntry = null;
+        let replyToMessage = null; // Armazena a mensagem que está sendo respondida
         
-        
+        // Inicializar socket
+        function initSocket() {
+            if (socket) {
+                socket.disconnect();
+            }
+            socket = io(endpoint);
+            
+            // Eventos do socket
+            socket.on('connect', () => {
+                console.log('Conectado ao servidor');
+                // Reconectar ao chat atual se existir
+                if (currentChat) {
+                    socket.emit('entrar_chat', currentChat.id);
+                }
+            });
+            
+            socket.on('disconnect', () => {
+                console.log('Desconectado do servidor');
+                // Atualizar status online quando desconectar
+                const onlineMarker = document.getElementById('online_marker');
+                if (onlineMarker && currentChat) {
+                    onlineMarker.innerText = 'Offline';
+                }
+            });
+            
             socket.on('novochat', (data)=>{
-            //Adicionar na lista de chats
-            const chat = data.chat;
-            if(chat.user_token != socket.id) {
-                chats.push(chat);
-                if(!currentChat) {
+                //Adicionar na lista de chats
+                const chat = data.chat;
+                if(chat.user_token != socket.id) {
+                    chats.push(chat);
+                    if(!currentChat) {
+                        renderChatsList();
+                    }
+                }
+            });
+            
+            socket.on(`nova_mensagem`, (data)=>{
+                if(data.user_id != socket.id) {
+                    const message = data;
+                    message.isSent = false;
+                    messages.push(message);
+                    if (currentChat) {
+                        const messagesArea = document.getElementById('messagesArea');
+                        if (messagesArea) {
+                            const emptyMsg = messagesArea.querySelector('.empty-messages');
+                            if (emptyMsg) emptyMsg.remove();
+                            messagesArea.appendChild(createMessageElement(message));
+                            messagesArea.scrollTop = messagesArea.scrollHeight;
+                        }
+                    }
+                }
+            });
+            
+            socket.on(`online_chat`, (dados)=>{
+                const online = document.getElementById('online_marker');
+                if(online && currentChat) {
+                    online.innerText = `${dados} Online`;
+                }
+            });
+        }
+        
+        // Carregar chats
+        async function loadChats() {
+            try {
+                let request = await fetch(`${endpoint}/chats`);
+                let anser = await request.json();
+
+                if(request.status == 200) {
+                    let chates = anser.chats;
+                    chats = chates;
                     renderChatsList();
                 }
+            } catch (error) {
+                console.error('Erro ao carregar chats:', error);
             }
-            });
-        
-        // Carregar chats do localStorage
-        
-        async function loadChats() {
-            let request = await fetch(`${endpoint}/chats`);
-            let anser = await request.json();
-
-            if(request.status == 200) {
-                //Aqui vai se carregar as mensagens
-                let chates = anser.chats;
-                chats = chates;
-                renderChatsList();
-            }else {
-                //Erro ao carregar as mensagens
-            }
-        }
-
-        function loadChatsFromStorage() {
-            const chates = JSON.parse(localStorage.getItem('chats'));
-            chats = chates;
-            renderChatsList();
-        }
-
-        
-
-        if(!currentChat && chats.length > 0) {
-            document.getElementById('joke-banner').addEventListener('click', ()=>{
-                alert('Granda   VOID, acreditaste mesmo que irias entrar kkkkk. Fica fora ou vai pedir a senha lombucho');
-            });
         }
 
         // Renderizar lista de chats
         function renderChatsList() {
             const app = document.getElementById('app');
-            const joke = `<a href="" id="joke-banner">Clique aqui para pedir permissão</a>`;
             app.innerHTML = `
                 <div class="chat-header">
                     <h1>💬 NeuserChat | Online mode</h1>
@@ -612,7 +850,7 @@
                                 <div class="chat-name">${escapeHtml(chat.nome)}</div>
                                 <div class="chat-stats"> Este chat é ${chat.is_private ? 'privado' : 'público.'}.</div>
                             </div>
-                            ${chat.is_private ? '<div class="chat-password-badge">🔒 Protegido</div>' : '<div class="chat-password-badge" style="background: #28a745; color: white;">🔓 Aberto</div>'}
+                            ${chat.is_private ? '<div class="chat-password-badge" style="background: #ffc107; color: #856404;">🔒 Protegido</div>' : '<div class="chat-password-badge" style="background: #28a745; color: white;">🔓 Aberto</div>'}
                         </div>
                     `).join('')}
                 </div>
@@ -625,20 +863,20 @@
                     const chatId = item.dataset.chatId;
                     const chat = chats.find(c => c.id === chatId);
                     if (chat.is_private) {
-                        // Chat com senha - pedir senha
                         showEnterPasswordModal(chat);
                     } else {
-                        // Chat sem senha - entrar direto
                         enterChat(chat);
                     }
                 });
             });
 
-            document.getElementById('createChatBtn').addEventListener('click', () => {
-                showCreateChatModal();
-            });
+            const createBtn = document.getElementById('createChatBtn');
+            if (createBtn) {
+                createBtn.addEventListener('click', () => {
+                    showCreateChatModal();
+                });
+            }
 
-            // Dark mode
             initDarkMode();
         }
 
@@ -681,29 +919,45 @@
         // Entrar no chat
         function enterChat(chat) {
             currentChat = chat;
+            replyToMessage = null;
             
-
-            // Desconectar socket anterior se existir
+            // Sair do chat anterior se existir
+            if (socket && currentChat) {
+                socket.emit('entrar_chat', chat.id);
+            }
             
-            // Conectar ao socket com o ID do chat
-            socket.emit('entrar_chat', chat.id);
-            //setupSocket();
             renderChatInterface();
         }
 
         function createMessageElement(message) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
+            messageDiv.setAttribute('data-message-id', message.id);
+            
+            // Adicionar reply badge se houver resposta
+            let replyHtml = '';
+            if (message.replyTo) {
+                replyHtml = `
+                    <div class="reply-badge">
+                        <div class="reply-sender">↩️ Respondendo a 'Alguém'</div>
+                        <div class="reply-text">"${escapeHtml(message.replyTo.text.substring(0, 60))}${message.replyTo.text.length > 60 ? '...' : ''}"</div>
+                    </div>
+                `;
+            }
             
             if (message.type === 'image') {
                 messageDiv.innerHTML = `
+                    ${replyHtml}
                     <img src="${escapeHtml(message.text)}" class="message-image" onclick="openImageModal('${escapeHtml(message.text)}')" alt="Imagem">
                     <div class="message-time">${message.time}</div>
+                    <button class="reply-button" onclick="event.stopPropagation(); replyToMessageById('${message.id}')">↩️ Responder</button>
                 `;
             } else {
                 messageDiv.innerHTML = `
+                    ${replyHtml}
                     <div class="message-text">${escapeHtml(message.text)}</div>
                     <div class="message-time">${message.time}</div>
+                    <button class="reply-button" onclick="event.stopPropagation(); replyToMessageById('${message.id}')">↩️ Responder</button>
                 `;
             }
             
@@ -716,92 +970,136 @@
                 <div class="chat-header">
                     <button class="back-button" id="backButton">← Voltar</button>
                     <h1>💬 ${escapeHtml(currentChat.nome)}</h1>
-                    <p id="online_marker">Offline</p>
+                    <p id="online_marker">Carregando...</p>
                     <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
                 </div>
                 <div class="messages-area" id="messagesArea">
-                    ${'<div class="empty-messages">💬 Nenhuma mensagem ainda<br>Seja o primeiro a enviar uma mensagem!</div>'}
+                    ${messages.length === 0 ? '<div class="empty-messages">💬 Nenhuma mensagem ainda<br>Seja o primeiro a enviar uma mensagem!</div>' : ''}
                 </div>
                 <div class="input-area">
+                    <div id="replyPreview" class="reply-preview" style="display: none;">
+                        <div class="reply-preview-content">
+                            <div class="reply-preview-label">Respondendo a <span id="replyToName"></span></div>
+                            <div class="reply-preview-text" id="replyToText"></div>
+                        </div>
+                        <button class="cancel-reply" onclick="cancelReply()">✕</button>
+                    </div>
                     <form class="input-form" id="messageForm">
                         <div class="input-wrapper">
-                            <input type="text" class="message-input" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off">
-                            <button type="button" class="photo-button" id="photoButton">📷 Foto</button>
+                            <textarea class="message-input" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off" rows="1"></textarea>
                         </div>
-                        <button type="submit" class="send-button">Enviar</button>
+                        <div class="action-buttons">
+                            <button type="button" class="photo-button" id="photoButton">📷 Foto</button>
+                            <button type="submit" class="send-button">Enviar</button>
+                        </div>
                     </form>
                     <input type="file" id="photoInput" accept="image/*" style="display: none;">
                 </div>
             `;
             
-            /* Renderizar mensagens existentes
+            // Renderizar mensagens existentes
             const messagesArea = document.getElementById('messagesArea');
             if (messages.length > 0) {
                 messagesArea.innerHTML = '';
-                /*messages.forEach(message => {
+                messages.forEach(message => {
                     messagesArea.appendChild(createMessageElement(message));
-                })
+                });
                 messagesArea.scrollTop = messagesArea.scrollHeight;
-            }*/
+            }
+            
+            // Auto-resize do textarea
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                });
+            }
             
             // Eventos do chat
-            document.getElementById('backButton').addEventListener('click', () => {
-                if(currentChat) {
-                socket.emit('disconect_chat', currentChat.id);
-                currentChat = null;
-                renderChatsList();
-                }
-            });
+            const backButton = document.getElementById('backButton');
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    if(currentChat && socket) {
+                        socket.emit('disconect_chat', currentChat.id);
+                        currentChat = null;
+                        messages = [];
+                        replyToMessage = null;
+                        renderChatsList();
+                    }
+                });
+            }
             
             const messageForm = document.getElementById('messageForm');
-            const messageInput = document.getElementById('messageInput');
             const photoButton = document.getElementById('photoButton');
             const photoInput = document.getElementById('photoInput');
             
-            messageForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const messageText = messageInput.value;
-                if (sendTextMessage(messageText)) {
-                    messageInput.value = '';
-                    messageInput.focus();
-                }
-            });
-            
-            photoButton.addEventListener('click', () => {
-                photoInput.click();
-            });
-            
-            photoInput.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (file && file.type.startsWith('image/')) {
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('A imagem deve ter no máximo 5MB!');
-                        photoInput.value = '';
-                        return;
+            if (messageForm) {
+                messageForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const messageText = document.getElementById('messageInput').value;
+                    if (sendTextMessage(messageText)) {
+                        document.getElementById('messageInput').value = '';
+                        document.getElementById('messageInput').style.height = 'auto';
+                        document.getElementById('messageInput').focus();
                     }
-                    const success = await sendImageMessage(file);
-                    if (!success) alert('Erro ao enviar imagem.');
-                    photoInput.value = '';
-                }
-            });
+                });
+            }
+            
+            if (photoButton) {
+                photoButton.addEventListener('click', () => {
+                    photoInput.click();
+                });
+            }
+            
+            if (photoInput) {
+                photoInput.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert('A imagem deve ter no máximo 5MB!');
+                            photoInput.value = '';
+                            return;
+                        }
+                        const success = await sendImageMessage(file);
+                        if (!success) alert('Erro ao enviar imagem.');
+                        photoInput.value = '';
+                    }
+                });
+            }
             
             initDarkMode();
         }
 
-        socket.on(`nova_mensagem`, (data)=>{
-            if(data.user_id != socket.id) {
-                const message = data;
-                message.isSent = false;
-                if (currentChat) {
-                const messagesArea = document.getElementById('messagesArea');
-                const emptyMsg = messagesArea.querySelector('.empty-messages');
-                if (emptyMsg) emptyMsg.remove();
-                messagesArea.appendChild(createMessageElement(message));
-                messagesArea.scrollTop = messagesArea.scrollHeight;
+        // Função para responder a uma mensagem
+        window.replyToMessageById = function(messageId) {
+            const messageToReply = messages.find(m => m.id.toString() === messageId.toString());
+            if (messageToReply) {
+                replyToMessage = {
+                    id: messageToReply.id,
+                    sender: messageToReply.isSent ? 'Você' : (messageToReply.user_id || 'Alguém'),
+                    text: messageToReply.type === 'image' ? '📷 [Imagem]' : messageToReply.text
+                };
+                
+                const replyPreview = document.getElementById('replyPreview');
+                if (replyPreview) {
+                    document.getElementById('replyToName').textContent = replyToMessage.sender;
+                    document.getElementById('replyToText').textContent = 
+                        replyToMessage.text.length > 60 ? replyToMessage.text.substring(0, 60) + '...' : replyToMessage.text;
+                    replyPreview.style.display = 'flex';
+                    document.getElementById('messageInput').focus();
+                }
             }
-            }
-        });
+        };
         
+        // Função para cancelar resposta
+        window.cancelReply = function() {
+            replyToMessage = null;
+            const replyPreview = document.getElementById('replyPreview');
+            if (replyPreview) {
+                replyPreview.style.display = 'none';
+            }
+        };
 
         function sendTextMessage(text) {
             if (!text || text.trim() === '') return false;
@@ -812,31 +1110,35 @@
                 text: text.trim(),
                 time: getCurrentTime(),
                 isSent: true,
-                type: 'text'
+                type: 'text',
+                replyTo: replyToMessage ? {
+                    id: replyToMessage.id,
+                    sender: replyToMessage.sender,
+                    text: replyToMessage.text
+                } : null
             };
-            if(!currentChat) return false;
+            
+            if(!currentChat || !socket) return false;
+            
+            messages.push(message);
             
             const messagesArea = document.getElementById('messagesArea');
-            const emptyMsg = messagesArea.querySelector('.empty-messages');
-            if (emptyMsg) emptyMsg.remove();
-            messagesArea.appendChild(createMessageElement(message));
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-            
+            if (messagesArea) {
+                const emptyMsg = messagesArea.querySelector('.empty-messages');
+                if (emptyMsg) emptyMsg.remove();
+                messagesArea.appendChild(createMessageElement(message));
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
             
             const chatid = currentChat.id;
             socket.emit('enviar_mensagem', {chatid, message});
+            
+            // Limpar resposta após enviar
+            cancelReply();
+            
             return true;
         }
-            socket.on(`online_chat`, (dados)=>{
-
-                const online = document.getElementById('online_marker');
-                if(online) {
-                    online.innerText = `${dados} Online`;
-                }
-            })
     
-        
-
         async function sendImageMessage(file) {
             if (!file) return false;
             
@@ -848,20 +1150,32 @@
                     text: base64Image,
                     time: getCurrentTime(),
                     isSent: true,
-                    type: 'image'
+                    type: 'image',
+                    replyTo: replyToMessage ? {
+                        id: replyToMessage.id,
+                        sender: replyToMessage.sender,
+                        text: replyToMessage.text
+                    } : null
                 };
                 
-                if(!currentChat) return false;
+                if(!currentChat || !socket) return false;
             
-                const messagesArea = document.getElementById('messagesArea');
-                const emptyMsg = messagesArea.querySelector('.empty-messages');
-                if (emptyMsg) emptyMsg.remove();
-                messagesArea.appendChild(createMessageElement(message));
-                messagesArea.scrollTop = messagesArea.scrollHeight;
+                messages.push(message);
                 
+                const messagesArea = document.getElementById('messagesArea');
+                if (messagesArea) {
+                    const emptyMsg = messagesArea.querySelector('.empty-messages');
+                    if (emptyMsg) emptyMsg.remove();
+                    messagesArea.appendChild(createMessageElement(message));
+                    messagesArea.scrollTop = messagesArea.scrollHeight;
+                }
                 
                 const chatid = currentChat.id;
                 socket.emit('enviar_mensagem', {chatid, message});
+                
+                // Limpar resposta após enviar
+                cancelReply();
+                
                 return true;
 
             } catch (error) {
@@ -901,9 +1215,8 @@
             });
         }
 
-
-
         function escapeHtml(text) {
+            if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
@@ -912,13 +1225,17 @@
         window.openImageModal = function(imageUrl) {
             const modal = document.getElementById('imageModal');
             const modalImage = document.getElementById('modalImage');
-            modalImage.src = imageUrl;
-            modal.style.display = 'flex';
+            if (modal && modalImage) {
+                modalImage.src = imageUrl;
+                modal.style.display = 'flex';
+            }
         };
 
-        document.getElementById('imageModal').addEventListener('click', function() {
-            this.style.display = 'none';
-        });
+        if (document.getElementById('imageModal')) {
+            document.getElementById('imageModal').addEventListener('click', function() {
+                this.style.display = 'none';
+            });
+        }
 
         function initDarkMode() {
             const darkModeToggle = document.getElementById('darkModeToggle');
@@ -952,74 +1269,84 @@
                 body: JSON.stringify(chat)
             });
 
-            let anser = await request.json();
-            
             return request.status;
         }
 
         // Configurar modal
-        document.getElementById('confirmBtn').addEventListener('click',async () => {
-            if (currentModalType === 'create') {
-                // Criar novo chat
-                const name = document.getElementById('chatName').value;
-                const password = document.getElementById('chatPassword').value;
-                
-                if (!name.trim()) {
-                    document.getElementById('errorMessage').textContent = '❌ Nome do chat é obrigatório!';
-                    return;
-                }
-                
-                const newChat = {
-                    id: Date.now().toString(),
-                    nome: name.trim(),
-                    is_private: password != '',
-                    senha: password || '',
-                    user_token: socket.id
-                };
-                
-                if(await criarChat(newChat) == 403) {
-                    document.getElementById('errorMessage').textContent = '❌ Já existe um número máximo de chats';
-                    return;
-                }
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', async () => {
+                if (currentModalType === 'create') {
+                    const name = document.getElementById('chatName').value;
+                    const password = document.getElementById('chatPassword').value;
+                    
+                    if (!name.trim()) {
+                        document.getElementById('errorMessage').textContent = '❌ Nome do chat é obrigatório!';
+                        return;
+                    }
+                    
+                    const newChat = {
+                        id: Date.now().toString(),
+                        nome: name.trim(),
+                        is_private: password != '',
+                        senha: password || '',
+                        user_token: socket.id
+                    };
+                    
+                    if(await criarChat(newChat) == 403) {
+                        document.getElementById('errorMessage').textContent = '❌ Já existe um número máximo de chats';
+                        return;
+                    }
 
-                chats.push(newChat);
-                closeModal();
-                renderChatsList();
-                
-            } else if (currentModalType === 'enter') {
-                // Entrar no chat com senha
-                const enteredPassword = document.getElementById('chatPassword').value;
-
-                const data = {
-                    id:selectedChatForEntry.id,
-                    senha:enteredPassword,
-                };
-
-                if (await verifyPass(data)) {
-                    const temp = selectedChatForEntry;
+                    chats.push(newChat);
                     closeModal();
-                    enterChat(temp);
-                } else {
-                    document.getElementById('errorMessage').textContent = '❌ Senha incorreta! Tente novamente.';
-                    document.getElementById('chatPassword').value = '';
-                    document.getElementById('chatPassword').focus();
+                    renderChatsList();
+                    
+                } else if (currentModalType === 'enter') {
+                    const enteredPassword = document.getElementById('chatPassword').value;
+
+                    const data = {
+                        id:selectedChatForEntry.id,
+                        senha:enteredPassword,
+                    };
+
+                    if (await verifyPass(data)) {
+                        const temp = selectedChatForEntry;
+                        closeModal();
+                        enterChat(temp);
+                    } else {
+                        document.getElementById('errorMessage').textContent = '❌ Senha incorreta! Tente novamente.';
+                        document.getElementById('chatPassword').value = '';
+                        document.getElementById('chatPassword').focus();
+                    }
                 }
-            }
-        });
-
-        socket.on('disconnet', (data)=>{
-            localStorage.clear();
-        })
+            });
+        }
         
-        document.getElementById('cancelBtn').addEventListener('click', closeModal);
-
-        socket.on('disconnect', (dados)=>{
-            if(currentChat) {
-                socket.emit('disconect_chat', currentChat.id);
-            }
-        });
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', closeModal);
+        }
         
+        // Inicializar aplicação
+        initSocket();
         loadChats();
+        
+        // Evento de beforeunload para desconectar ao recarregar a página
+        window.addEventListener('beforeunload', () => {
+            if (socket && currentChat) {
+                socket.emit('disconect_chat', currentChat.id);
+                socket.disconnect();
+            }
+        });
+        
+        // Reconectar ao carregar a página
+        window.addEventListener('load', () => {
+            if (socket && currentChat) {
+                socket.emit('entrar_chat', currentChat.id);
+            }
+        });
     </script>
 </body>
 </html>

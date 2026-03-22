@@ -112,6 +112,208 @@
             background: #764ba2;
         }
 
+        /* Lista de chats */
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .chat-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        body.dark-mode .chat-item {
+            background: #2d2d3a;
+        }
+
+        .chat-item:hover {
+            transform: translateX(5px);
+            background: #e9ecef;
+        }
+
+        body.dark-mode .chat-item:hover {
+            background: #3d3d4a;
+        }
+
+        .chat-info {
+            flex: 1;
+        }
+
+        .chat-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        body.dark-mode .chat-name {
+            color: #e0e0e0;
+        }
+
+        .chat-stats {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        body.dark-mode .chat-stats {
+            color: #a0a0b0;
+        }
+
+        .chat-password-badge {
+            background: #ffc107;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        body.dark-mode .chat-password-badge {
+            background: #ffc107;
+            color: #856404;
+        }
+
+        /* Botões */
+        .create-chat-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 20px;
+            transition: all 0.3s;
+        }
+
+        .create-chat-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .create-chat-btn {
+            background: #764ba2;
+        }
+
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #5a6268;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        body.dark-mode .modal-content {
+            background: #2d2d3a;
+            color: #e0e0e0;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        body.dark-mode .modal-content input {
+            background: #1a1a2a;
+            border-color: #3d3d4a;
+            color: #e0e0e0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            background: #5a67d8;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
         /* Área de mensagens */
         .messages-area {
             flex: 1;
@@ -124,7 +326,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Dark mode messages area */
         body.dark-mode .messages-area {
             background: #1a1a2a;
         }
@@ -136,7 +337,6 @@
             word-wrap: break-word;
             animation: fadeIn 0.3s ease;
             transition: all 0.3s ease;
-            position: relative;
         }
 
         @keyframes fadeIn {
@@ -151,12 +351,12 @@
         }
 
         .message.received {
-            background: white;
+            background: rgb(105, 109, 106);
             align-self: flex-start;
             border-bottom-left-radius: 4px;
+            color: #ffffff;
         }
 
-        /* Dark mode received message */
         body.dark-mode .message.received {
             background: #2d2d3a;
             color: #e0e0e0;
@@ -169,40 +369,25 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* Dark mode sent message */
         body.dark-mode .message.sent {
             background: #764ba2;
-        }
-
-        /* Estilo para mensagem respondida */
-        .reply-preview {
-            background: rgba(0, 0, 0, 0.1);
-            border-left: 3px solid #667eea;
-            padding: 5px 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-        }
-
-        body.dark-mode .reply-preview {
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: #764ba2;
-        }
-
-        .reply-sender {
-            font-weight: bold;
-            margin-bottom: 3px;
-            font-size: 0.75rem;
-        }
-
-        .reply-text {
-            opacity: 0.8;
-            font-style: italic;
         }
 
         .message-text {
             font-size: 0.95rem;
             line-height: 1.4;
+        }
+
+        .message-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .message-image:hover {
+            transform: scale(1.02);
         }
 
         .message-time {
@@ -212,36 +397,8 @@
             text-align: right;
         }
 
-        /* Botão de responder */
-        .reply-button {
-            position: absolute;
-            right: 10px;
-            bottom: 5px;
-            background: rgba(0, 0, 0, 0.1);
-            border: none;
-            border-radius: 15px;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s;
-            color: inherit;
-        }
-
-        .message:hover .reply-button {
-            opacity: 1;
-        }
-
-        body.dark-mode .reply-button {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .reply-button:hover {
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        body.dark-mode .reply-button:hover {
-            background: rgba(255, 255, 255, 0.3);
+        body.dark-mode .message-time {
+            color: #a0a0b0;
         }
 
         /* Input area */
@@ -252,64 +409,19 @@
             transition: all 0.3s ease;
         }
 
-        /* Dark mode input area */
         body.dark-mode .input-area {
             background: #2d2d3a;
             border-top: 1px solid #3d3d4a;
         }
 
-        /* Preview de resposta */
-        .reply-preview-area {
-            background: #f1f3f5;
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-bottom: 10px;
-            display: none;
-            position: relative;
-            border-left: 3px solid #667eea;
-        }
-
-        body.dark-mode .reply-preview-area {
-            background: #1a1a2a;
-            border-left-color: #764ba2;
-        }
-
-        .reply-preview-area.active {
-            display: block;
-        }
-
-        .reply-preview-content {
-            font-size: 0.85rem;
-        }
-
-        .reply-preview-sender {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .reply-preview-text {
-            opacity: 0.8;
-            font-style: italic;
-            word-break: break-word;
-        }
-
-        .cancel-reply {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: #6c757d;
-            padding: 0 4px;
-        }
-
-        .cancel-reply:hover {
-            color: #dc3545;
-        }
-
         .input-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .input-wrapper {
+            flex: 1;
             display: flex;
             gap: 10px;
         }
@@ -327,23 +439,30 @@
             color: #495057;
         }
 
-        /* Dark mode input */
         body.dark-mode .message-input {
             background: #1a1a2a;
-            border: 2px solid #3d3d4a;
+            border-color: #3d3d4a;
             color: #e0e0e0;
-        }
-
-        body.dark-mode .message-input::placeholder {
-            color: #6c757d;
         }
 
         .message-input:focus {
             border-color: #667eea;
         }
 
-        body.dark-mode .message-input:focus {
-            border-color: #764ba2;
+        .photo-button {
+            padding: 12px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .photo-button:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
         }
 
         .send-button {
@@ -362,315 +481,545 @@
             transform: translateY(-1px);
         }
 
-        .send-button:active {
-            transform: translateY(0);
-        }
-
-        /* Dark mode send button */
-        body.dark-mode .send-button {
-            background: #764ba2;
-        }
-
-        body.dark-mode .send-button:hover {
-            background: #5a3780;
-        }
-
-        /* Mensagem vazia */
         .empty-messages {
             text-align: center;
             color: #6c757d;
             padding: 40px;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
         }
 
-        /* Dark mode empty message */
-        body.dark-mode .empty-messages {
-            color: #a0a0b0;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
         }
 
-        /* Scrollbar */
-        .messages-area::-webkit-scrollbar {
-            width: 6px;
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
         }
 
-        .messages-area::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .messages-area::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 3px;
-        }
-
-        /* Dark mode scrollbar */
-        body.dark-mode .messages-area::-webkit-scrollbar-track {
-            background: #2d2d3a;
-        }
-
-        body.dark-mode .messages-area::-webkit-scrollbar-thumb {
-            background: #764ba2;
-        }
-
-        /* Responsivo */
         @media (max-width: 768px) {
             .chat-container {
                 width: 100%;
                 height: 100vh;
                 border-radius: 0;
             }
-            
             .message {
                 max-width: 85%;
-            }
-
-            .dark-mode-toggle {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            .reply-button {
-                opacity: 1;
-                bottom: 2px;
-                right: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1>💬 Chat do Grupo</h1>
-            <p>Conversa em grupo</p>
-            <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
-        </div>
-        
-        <div class="messages-area" id="messagesArea">
-            <div class="empty-messages">
-                💬 Nenhuma mensagem ainda<br>
-                Seja o primeiro a enviar uma mensagem!
+    <div class="chat-container" id="app">
+        <!-- Página de lista de chats será inserida aqui -->
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <h2 id="modalTitle">Criar Novo Chat</h2>
+            <input type="text" id="chatName" placeholder="Nome do chat">
+            <input type="password" id="chatPassword" placeholder="Senha">
+            <div class="error-message" id="errorMessage"></div>
+            <div class="modal-buttons">
+                <button class="confirm-btn" id="confirmBtn">Confirmar</button>
+                <button class="cancel-btn" id="cancelBtn">Cancelar</button>
             </div>
-        </div>
-        
-        <div class="input-area">
-            <div class="reply-preview-area" id="replyPreviewArea">
-                <button class="cancel-reply" id="cancelReplyBtn">✕</button>
-                <div class="reply-preview-content">
-                    <div class="reply-preview-sender" id="replyPreviewSender">Respondendo a:</div>
-                    <div class="reply-preview-text" id="replyPreviewText"></div>
-                </div>
-            </div>
-            <form class="input-form" id="messageForm">
-                <input 
-                    type="text" 
-                    class="message-input" 
-                    id="messageInput" 
-                    placeholder="Digite sua mensagem..."
-                    autocomplete="off"
-                >
-                <button type="submit" class="send-button">Enviar</button>
-            </form>
         </div>
     </div>
-    <script src="https://backend-chat-message.onrender.com/socket.io/socket.io.js"></script>
+
+    <div class="modal" id="imageModal">
+        <img id="modalImage" alt="Imagem ampliada">
+    </div>
+
+    <script src="http://172.20.10.2:3000/socket.io/socket.io.js"></script>
     <script>
-        // Dark mode functionality
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
+        // Estado da aplicação
+        const endpoint = "http://172.20.10.2:3000";
+        let currentChat = null;
+        let chats = [];
+        let messages = [];
+        let socket = io(endpoint);
+        let currentModalType = null; // 'create' ou 'enter'
+        let selectedChatForEntry = null;
         
-        // Check for saved dark mode preference
-        const savedDarkMode = localStorage.getItem('darkMode');
-        if (savedDarkMode === 'enabled') {
-            body.classList.add('dark-mode');
-            darkModeToggle.textContent = '☀️';
+        
+            socket.on('novochat', (data)=>{
+            //Adicionar na lista de chats
+            const chat = data.chat;
+            if(chat.user_token != socket.id) {
+                chats.push(chat);
+                if(!currentChat) {
+                    renderChatsList();
+                }
+            }
+            });
+        
+        // Carregar chats do localStorage
+        
+        async function loadChats() {
+            let request = await fetch(`${endpoint}/chats`);
+            let anser = await request.json();
+
+            if(request.status == 200) {
+                //Aqui vai se carregar as mensagens
+                let chates = anser.chats;
+                chats = chates;
+                renderChatsList();
+            }else {
+                //Erro ao carregar as mensagens
+            }
         }
+
+        function loadChatsFromStorage() {
+            const chates = JSON.parse(localStorage.getItem('chats'));
+            chats = chates;
+            renderChatsList();
+        }
+
         
-        // Toggle dark mode
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
+
+        if(!currentChat && chats.length > 0) {
+            document.getElementById('joke-banner').addEventListener('click', ()=>{
+                alert('Granda   VOID, acreditaste mesmo que irias entrar kkkkk. Fica fora ou vai pedir a senha lombucho');
+            });
+        }
+
+        // Renderizar lista de chats
+        function renderChatsList() {
+            const app = document.getElementById('app');
+            const joke = `<a href="" id="joke-banner">Clique aqui para pedir permissão</a>`;
+            app.innerHTML = `
+                <div class="chat-header">
+                    <h1>💬 NeuserChat | Online mode</h1>
+                    <p>Selecione um chat para conversar</p>
+                    <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
+                </div>
+                <div class="chats-list" id="chatsList">
+                    ${chats.map(chat => `
+                        <div class="chat-item" data-chat-id="${chat.id}">
+                            <div class="chat-info">
+                                <div class="chat-name">${escapeHtml(chat.nome)}</div>
+                                <div class="chat-stats"> Este chat é ${chat.is_private ? 'privado' : 'público.'}.</div>
+                            </div>
+                            ${chat.is_private ? '<div class="chat-password-badge">🔒 Protegido</div>' : '<div class="chat-password-badge" style="background: #28a745; color: white;">🔓 Aberto</div>'}
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="create-chat-btn" id="createChatBtn">+ Criar Novo Chat</button>
+            `;
+
+            // Adicionar eventos
+            document.querySelectorAll('.chat-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const chatId = item.dataset.chatId;
+                    const chat = chats.find(c => c.id === chatId);
+                    if (chat.is_private) {
+                        // Chat com senha - pedir senha
+                        showEnterPasswordModal(chat);
+                    } else {
+                        // Chat sem senha - entrar direto
+                        enterChat(chat);
+                    }
+                });
+            });
+
+            document.getElementById('createChatBtn').addEventListener('click', () => {
+                showCreateChatModal();
+            });
+
+            // Dark mode
+            initDarkMode();
+        }
+
+        // Mostrar modal para entrar no chat com senha
+        function showEnterPasswordModal(chat) {
+            currentModalType = 'enter';
+            selectedChatForEntry = chat;
             
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-                darkModeToggle.textContent = '☀️';
+            document.getElementById('modalTitle').textContent = `🔒 Entrar em: ${chat.nome}`;
+            document.getElementById('chatName').style.display = 'none';
+            document.getElementById('chatPassword').value = '';
+            document.getElementById('chatPassword').placeholder = 'Digite a senha do chat';
+            document.getElementById('errorMessage').textContent = '';
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        // Mostrar modal de criar chat
+        function showCreateChatModal() {
+            currentModalType = 'create';
+            selectedChatForEntry = null;
+            
+            document.getElementById('modalTitle').textContent = '➕ Criar Novo Chat';
+            document.getElementById('chatName').style.display = 'block';
+            document.getElementById('chatName').value = '';
+            document.getElementById('chatPassword').value = '';
+            document.getElementById('chatPassword').placeholder = 'Senha (opcional)';
+            document.getElementById('errorMessage').textContent = '';
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+            currentModalType = null;
+            selectedChatForEntry = null;
+            document.getElementById('errorMessage').textContent = '';
+        }
+
+        // Entrar no chat
+        function enterChat(chat) {
+            currentChat = chat;
+            
+
+            // Desconectar socket anterior se existir
+            
+            // Conectar ao socket com o ID do chat
+            socket.emit('entrar_chat', chat.id);
+            //setupSocket();
+            renderChatInterface();
+        }
+
+        function createMessageElement(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
+            
+            if (message.type === 'image') {
+                messageDiv.innerHTML = `
+                    <img src="${escapeHtml(message.text)}" class="message-image" onclick="openImageModal('${escapeHtml(message.text)}')" alt="Imagem">
+                    <div class="message-time">${message.time}</div>
+                `;
             } else {
-                localStorage.setItem('darkMode', 'disabled');
-                darkModeToggle.textContent = '🌙';
+                messageDiv.innerHTML = `
+                    <div class="message-text">${escapeHtml(message.text)}</div>
+                    <div class="message-time">${message.time}</div>
+                `;
+            }
+            
+            return messageDiv;
+        }
+
+        function renderChatInterface() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="chat-header">
+                    <button class="back-button" id="backButton">← Voltar</button>
+                    <h1>💬 ${escapeHtml(currentChat.nome)}</h1>
+                    <p id="online_marker">Offline</p>
+                    <button class="dark-mode-toggle" id="darkModeToggle">🌙</button>
+                </div>
+                <div class="messages-area" id="messagesArea">
+                    ${'<div class="empty-messages">💬 Nenhuma mensagem ainda<br>Seja o primeiro a enviar uma mensagem!</div>'}
+                </div>
+                <div class="input-area">
+                    <form class="input-form" id="messageForm">
+                        <div class="input-wrapper">
+                            <input type="text" class="message-input" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off">
+                            <button type="button" class="photo-button" id="photoButton">📷 Foto</button>
+                        </div>
+                        <button type="submit" class="send-button">Enviar</button>
+                    </form>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                </div>
+            `;
+            
+            /* Renderizar mensagens existentes
+            const messagesArea = document.getElementById('messagesArea');
+            if (messages.length > 0) {
+                messagesArea.innerHTML = '';
+                /*messages.forEach(message => {
+                    messagesArea.appendChild(createMessageElement(message));
+                })
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }*/
+            
+            // Eventos do chat
+            document.getElementById('backButton').addEventListener('click', () => {
+                if(currentChat) {
+                socket.emit('disconect_chat', currentChat.id);
+                currentChat = null;
+                renderChatsList();
+                }
+            });
+            
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('messageInput');
+            const photoButton = document.getElementById('photoButton');
+            const photoInput = document.getElementById('photoInput');
+            
+            messageForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const messageText = messageInput.value;
+                if (sendTextMessage(messageText)) {
+                    messageInput.value = '';
+                    messageInput.focus();
+                }
+            });
+            
+            photoButton.addEventListener('click', () => {
+                photoInput.click();
+            });
+            
+            photoInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('A imagem deve ter no máximo 5MB!');
+                        photoInput.value = '';
+                        return;
+                    }
+                    const success = await sendImageMessage(file);
+                    if (!success) alert('Erro ao enviar imagem.');
+                    photoInput.value = '';
+                }
+            });
+            
+            initDarkMode();
+        }
+
+        socket.on(`nova_mensagem`, (data)=>{
+            if(data.user_id != socket.id) {
+                const message = data;
+                message.isSent = false;
+                if (currentChat) {
+                const messagesArea = document.getElementById('messagesArea');
+                const emptyMsg = messagesArea.querySelector('.empty-messages');
+                if (emptyMsg) emptyMsg.remove();
+                messagesArea.appendChild(createMessageElement(message));
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
             }
         });
         
-        // Armazenar mensagens
-        const socket = io("https://backend-chat-message.onrender.com/");
-        let messages = [];
-        let replyingTo = null; // Armazenar mensagem que está sendo respondida
+
+        function sendTextMessage(text) {
+            if (!text || text.trim() === '') return false;
+            
+            const message = {
+                user_id: socket.id,
+                id: Date.now(),
+                text: text.trim(),
+                time: getCurrentTime(),
+                isSent: true,
+                type: 'text'
+            };
+            if(!currentChat) return false;
+            
+            const messagesArea = document.getElementById('messagesArea');
+            const emptyMsg = messagesArea.querySelector('.empty-messages');
+            if (emptyMsg) emptyMsg.remove();
+            messagesArea.appendChild(createMessageElement(message));
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+            
+            
+            const chatid = currentChat.id;
+            socket.emit('enviar_mensagem', {chatid, message});
+            return true;
+        }
+            socket.on(`online_chat`, (dados)=>{
+
+                const online = document.getElementById('online_marker');
+                if(online) {
+                    online.innerText = `${dados} Online`;
+                }
+            })
+    
         
-        socket.on('connect', (msg)=>{
-            console.log("Online");
-        });
-        
-        // Função para formatar hora atual
+
+        async function sendImageMessage(file) {
+            if (!file) return false;
+            
+            try {
+                const base64Image = await imageToBase64(file);
+                const message = {
+                    user_id: socket.id,
+                    id: Date.now(),
+                    text: base64Image,
+                    time: getCurrentTime(),
+                    isSent: true,
+                    type: 'image'
+                };
+                
+                if(!currentChat) return false;
+            
+                const messagesArea = document.getElementById('messagesArea');
+                const emptyMsg = messagesArea.querySelector('.empty-messages');
+                if (emptyMsg) emptyMsg.remove();
+                messagesArea.appendChild(createMessageElement(message));
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+                
+                
+                const chatid = currentChat.id;
+                socket.emit('enviar_mensagem', {chatid, message});
+                return true;
+
+            } catch (error) {
+                console.error('Erro ao enviar imagem:', error);
+                return false;
+            }
+        }
+
+        async function verifyPass(data) {
+            const request = await fetch(`${endpoint}/chat/entrar`, {
+                method:"POST",
+                headers: {
+                    'Accept':'application/json',
+                    'Content-Type':'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+
+            if(request.status == 200) {
+                return true;
+            }
+
+            return false;
+        }
+
         function getCurrentTime() {
             const now = new Date();
             return now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         }
-        
-        // Função para escapar HTML (prevenir XSS)
+
+        function imageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-        
-        // Função para truncar texto longo
-        function truncateText(text, maxLength = 50) {
-            if (text.length <= maxLength) return text;
-            return text.substring(0, maxLength) + '...';
-        }
-        
-        // Função para criar elemento de mensagem
-        function createMessageElement(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${message.isSent ? 'sent' : 'received'}`;
-            messageDiv.setAttribute('data-message-id', message.id);
-            
-            let html = '';
-            
-            // Adicionar preview da mensagem respondida se existir
-            if (message.replyTo) {
-                html += `
-                    <div class="reply-preview">
-                        <div class="reply-sender">↳ Respondendo a: ${escapeHtml(message.replyTo.sender || 'Alguém')}</div>
-                        <div class="reply-text">${escapeHtml(truncateText(message.replyTo.text, 60))}</div>
-                    </div>
-                `;
-            }
-            
-            html += `
-                <div class="message-text">${escapeHtml(message.text)}</div>
-                <div class="message-time">${message.time}</div>
-                <button class="reply-button" onclick="setReplyTo(${message.id})">↩ Responder</button>
-            `;
-            
-            messageDiv.innerHTML = html;
-            return messageDiv;
-        }
-        
-        // Função para definir qual mensagem será respondida
-        window.setReplyTo = function(messageId) {
-            const message = messages.find(m => m.id === messageId);
-            if (message) {
-                replyingTo = message;
-                const replyPreviewArea = document.getElementById('replyPreviewArea');
-                const replyPreviewSender = document.getElementById('replyPreviewSender');
-                const replyPreviewText = document.getElementById('replyPreviewText');
-                
-                replyPreviewSender.textContent = `Respondendo a: ${message.isSent ? 'Você' : 'Alguém'}`;
-                replyPreviewText.textContent = truncateText(message.text, 80);
-                replyPreviewArea.classList.add('active');
-                
-                // Focar no input
-                document.getElementById('messageInput').focus();
-            }
+
+        window.openImageModal = function(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            modal.style.display = 'flex';
         };
-        
-        // Cancelar resposta
-        document.getElementById('cancelReplyBtn').addEventListener('click', () => {
-            replyingTo = null;
-            document.getElementById('replyPreviewArea').classList.remove('active');
+
+        document.getElementById('imageModal').addEventListener('click', function() {
+            this.style.display = 'none';
         });
-        
-        // Renderizar todas as mensagens
-        function renderMessages() {
-            const messagesArea = document.getElementById('messagesArea');
+
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (!darkModeToggle) return;
             
-            if (messages.length === 0) {
-                messagesArea.innerHTML = `
-                    <div class="empty-messages">
-                        💬 Nenhuma mensagem ainda<br>
-                        Seja o primeiro a enviar uma mensagem!
-                    </div>
-                `;
-                return;
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.textContent = '☀️';
             }
             
-            messagesArea.innerHTML = '';
-            
-            messages.forEach(message => {
-                const messageDiv = createMessageElement(message);
-                messagesArea.appendChild(messageDiv);
-            });
-            
-            // Scroll para a última mensagem
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-        
-        // Enviar mensagem
-        function sendMessage(text) {
-            if (!text || text.trim() === '') {
-                return false;
-            }
-            
-            const newMessage = {
-                token_id: socket.id,
-                id: Date.now(),
-                text: text.trim(),
-                time: getCurrentTime(),
-                isSent: true
-            };
-            
-            // Adicionar informação de resposta se houver
-            if (replyingTo) {
-                newMessage.replyTo = {
-                    id: replyingTo.id,
-                    text: replyingTo.text,
-                    sender: replyingTo.isSent ? 'Você' : 'Alguém'
-                };
-                // Limpar resposta após enviar
-                replyingTo = null;
-                document.getElementById('replyPreviewArea').classList.remove('active');
-            }
-            
-            socket.emit('enviar_mensagem', newMessage);
-            return true;
-        }
-        
-        // Receber novas mensagens
-        socket.on('novamensagem', (msg) => {
-            const message = msg.msg;
-            message.isSent = socket.id == msg.token_id;
-            messages.push(message);
-            
-            const messagesArea = document.getElementById('messagesArea');
-            
-            // Remover mensagem vazia se existir
-            if (messagesArea.querySelector('.empty-messages')) {
-                messagesArea.innerHTML = '';
-            }
-            
-            const messageDiv = createMessageElement(message);
-            messagesArea.appendChild(messageDiv);
-            
-            // Auto scroll
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        });
-        
-        // Inicializar chat
-        function init() {
-            const messageForm = document.getElementById('messageForm');
-            const messageInput = document.getElementById('messageInput');
-            
-            messageForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const messageText = messageInput.value;
-                if (sendMessage(messageText)) {
-                    messageInput.value = '';
-                    messageInput.focus();
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                    darkModeToggle.textContent = '☀️';
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                    darkModeToggle.textContent = '🌙';
                 }
             });
         }
+
+        async function criarChat(chat) {
+            let request = await fetch(`${endpoint}/chats`, {
+                method:    "POST",
+                headers :{
+                    'Content-Type':'application/json',
+                    'Accept':'application/json'
+                },
+                body: JSON.stringify(chat)
+            });
+
+            let anser = await request.json();
+            
+            return request.status;
+        }
+
+        // Configurar modal
+        document.getElementById('confirmBtn').addEventListener('click',async () => {
+            if (currentModalType === 'create') {
+                // Criar novo chat
+                const name = document.getElementById('chatName').value;
+                const password = document.getElementById('chatPassword').value;
+                
+                if (!name.trim()) {
+                    document.getElementById('errorMessage').textContent = '❌ Nome do chat é obrigatório!';
+                    return;
+                }
+                
+                const newChat = {
+                    id: Date.now().toString(),
+                    nome: name.trim(),
+                    is_private: password != '',
+                    senha: password || '',
+                    user_token: socket.id
+                };
+                
+                if(await criarChat(newChat) == 403) {
+                    document.getElementById('errorMessage').textContent = '❌ Já existe um número máximo de chats';
+                    return;
+                }
+
+                chats.push(newChat);
+                closeModal();
+                renderChatsList();
+                
+            } else if (currentModalType === 'enter') {
+                // Entrar no chat com senha
+                const enteredPassword = document.getElementById('chatPassword').value;
+
+                const data = {
+                    id:selectedChatForEntry.id,
+                    senha:enteredPassword,
+                };
+
+                if (await verifyPass(data)) {
+                    const temp = selectedChatForEntry;
+                    closeModal();
+                    enterChat(temp);
+                } else {
+                    document.getElementById('errorMessage').textContent = '❌ Senha incorreta! Tente novamente.';
+                    document.getElementById('chatPassword').value = '';
+                    document.getElementById('chatPassword').focus();
+                }
+            }
+        });
+
+        socket.on('disconnet', (data)=>{
+            localStorage.clear();
+        })
         
-        // Iniciar aplicação
-        init();
+        document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+        socket.on('disconnect', (dados)=>{
+            if(currentChat) {
+                socket.emit('disconect_chat', currentChat.id);
+            }
+        });
+        
+        loadChats();
     </script>
 </body>
 </html>

@@ -778,7 +778,7 @@
                 // Atualizar status online quando desconectar
                 const onlineMarker = document.getElementById('online_marker');
                 if (onlineMarker && currentChat) {
-                    onlineMarker.innerText = 'Offline';
+                    onlineMarker.innerText = 'Aqui tá sair xuxa yha...';
                 }
             });
             
@@ -807,13 +807,6 @@
                             messagesArea.scrollTop = messagesArea.scrollHeight;
                         }
                     }
-                }
-            });
-            
-            socket.on(`online_chat`, (dados)=>{
-                const online = document.getElementById('online_marker');
-                if(online && currentChat) {
-                    online.innerText = `${dados} Online`;
                 }
             });
         }

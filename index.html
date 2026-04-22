@@ -229,7 +229,6 @@
     const chatMain = document.querySelector('main');
     const snd_btn = document.getElementById('send-msg');
     const msg_field = document.getElementById('msg-field');
-    const chat_id = 45;
 
     const scrollToBottom = () => {
         chatMain.scrollTo({
@@ -251,14 +250,11 @@
         });
         const msg = {
             text: msg_field.value,
-            type:'text',
-            chat_id
+            type:'text'
         }
         socket.emit('send_message', msg)
         msg_field.value = ''
     });
-
-    socket.emit('teste_entrar', chat_id);
 
     socket.on('new_message', (info)=>{
         if(info.msg.type === 'text') {
@@ -329,8 +325,7 @@
                 criarMensagemImagem(imageUrl, true);
                 const msg = {
                     image:imageUrl,
-                    type:'image',
-                    chat_id
+                    type:'image'
                 }
                 socket.emit('send_message', msg);
                 scrollToBottom();

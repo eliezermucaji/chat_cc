@@ -219,7 +219,11 @@
 </script>
 <input accept="image/*" class="hidden" id="image-input" type="file"/>
 <script>
-    const socket = io('https://chat-anonimo-0tux.onrender.com')
+    const socket = io('https://chat-anonimo-0tux.onrender.com', {
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000
+})
     const imageInput = document.getElementById('image-input');
     const galleryButton = document.getElementById('gallery-button');
     const chatMain = document.querySelector('main');

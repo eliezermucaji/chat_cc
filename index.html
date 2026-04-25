@@ -257,6 +257,8 @@
     });
 
     socket.on('new_message', (info)=>{
+        const audio = new Audio("faa.mp3");
+        audio.play();
         if(info.msg.type === 'text') {
             criarMensagemTexto(
                 {

@@ -255,11 +255,23 @@
         msg_field.value = ''
     });
         const audio = new Audio("faaa.mp3");
+        // desbloqueia em qualquer interação
+        function unlockAudio() {
+            audio.play()
+                .then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                })
+                .catch(() => {});
+        }
+        
+        document.addEventListener("click", unlockAudio, { once: true });
+        document.addEventListener("touchstart", unlockAudio, { once: true });
+        console.log('Não faça nenhuma besteira tá bom?')
     socket.on('new_message', (info)=>{
         
-        audio.play().catch(err => {
-            console.log("Áudio bloqueado:", err);
-        });
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
         if(info.msg.type === 'text') {
             criarMensagemTexto(
                 {

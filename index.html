@@ -203,7 +203,6 @@
 </footer>
 <script src="https://chat-anonimo-0tux.onrender.com/socket.io/socket.io.js"></script>
 <script>
-    consolo.log('v22')
     // Auto-resize textarea
     const textarea = document.querySelector('textarea');
     textarea.addEventListener('input', function() {
@@ -255,10 +254,12 @@
         socket.emit('send_message', msg)
         msg_field.value = ''
     });
-
-    socket.on('new_message', (info)=>{
         const audio = new Audio("faa.mp3");
-        audio.play();
+    socket.on('new_message', (info)=>{
+        
+        audio.play().catch(err => {
+            console.log("Áudio bloqueado:", err);
+        });
         if(info.msg.type === 'text') {
             criarMensagemTexto(
                 {

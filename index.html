@@ -227,41 +227,28 @@
         imageInput.click();
     });
 
-    // Auto-resize textarea
-    const textarea = document.querySelector('textarea');
-    textarea.addEventListener('key-down', function() {
-        if(event.key === 'Enter') {
-            if(!msg_field.value) return;
+    // ========== CORREÇÃO DO ENTER ==========
+    // Remove os listeners antigos (caso existam) e adiciona o novo
+    // Vamos substituir tudo: não usamos mais os listeners com 'key-down'
+    msg_field.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // impede a quebra de linha
+            if (!msg_field.value) return;
+
             criarMensagemTexto({
                 texto: msg_field.value,
                 isMe: true,
                 reply: null
             });
-            const msg = {
+            socket.emit('send_message', {
                 text: msg_field.value,
-                type:'text'
-            }
-            socket.emit('send_message', msg)
-            msg_field.value = ''
+                type: 'text'
+            });
+            msg_field.value = '';
+            scrollToBottom();
         }
     });
-
-    msg_field.addEventListener('key-down', (event)=>{
-        if(event.key === 'Enter') {
-            if(!msg_field.value) return;
-            criarMensagemTexto({
-                texto: msg_field.value,
-                isMe: true,
-                reply: null
-            });
-            const msg = {
-                text: msg_field.value,
-                type:'text'
-            }
-            socket.emit('send_message', msg)
-            msg_field.value = ''
-        }
-    })
+    // ======================================
 
     snd_btn.addEventListener('click', ()=>{
         if(!msg_field.value) return;

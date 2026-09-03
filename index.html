@@ -240,6 +240,23 @@
         imageInput.click();
     });
 
+    msg_field.addEventListener('key-down', (event)=>{
+        if(event.key === 'Enter') {
+            if(!msg_field.value) return;
+            criarMensagemTexto({
+                texto: msg_field.value,
+                isMe: true,
+                reply: null
+            });
+            const msg = {
+                text: msg_field.value,
+                type:'text'
+            }
+            socket.emit('send_message', msg)
+            msg_field.value = ''
+        }
+    })
+
     snd_btn.addEventListener('click', ()=>{
         if(!msg_field.value) return;
         criarMensagemTexto({
